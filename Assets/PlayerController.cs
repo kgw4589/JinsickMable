@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         {
             var nextIndex = (_currentIndex + i + 1) % _map.Count;
             var dirPos = _map[nextIndex].transform.position
-                                    + new Vector3(0, 1.5f, 0);
+                                    + new Vector3(0, 2f, 0);
             transform.DOJump(dirPos,
                     2,
                     1,
