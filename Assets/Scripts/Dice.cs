@@ -21,19 +21,27 @@ public class Dice : MonoBehaviour
     {
         _gameManager = GameManager.Instance;
     }
-
+    
     void OnEnable()
     {
         _randomValue = Random.Range(0, 6);
+        ++_randomValue;
+        
         Debug.Log("랜덤값" + _randomValue);
-        _gameManager.diceValue += (_randomValue + 1);
+        _gameManager.diceValue += (_randomValue);
+
+        if (_gameManager.doubleCheckValue >= 10)
+            _gameManager.doubleCheckValue = _randomValue;
+        else if (_gameManager.doubleCheckValue == _randomValue)
+            _gameManager.isDiceDouble = true;
+        else _gameManager.doubleCheckValue = 10;
         
         transform.DOJump(dirPos.position,
             _jumpPower,
             _jumpCount,
             _duration);
         
-        transform.DORotate(dirRotation[_randomValue], _duration);
+        transform.DORotate(dirRotation[_randomValue - 1], _duration);
         
         StartCoroutine(ChangeState());
     }

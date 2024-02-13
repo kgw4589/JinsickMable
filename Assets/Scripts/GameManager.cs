@@ -7,12 +7,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public GameObject[] players;
+    public GameObject currentPlayer;
+    private int _playerIndex;
+    
     public enum State
     {
         Dice,
         Move,
         Wait,
-        Build
+        Build,
+        NextPlayer
     };
 
     public State state;
@@ -21,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     private float _diceDelay = 0.2f;
     public int diceValue = 0;
+    public int doubleCheckValue = 10;
+    public bool isDiceDouble = false;
 
     public GameObject diceButton;
     public GameObject diceValueText;
@@ -28,15 +35,18 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         state = State.Dice;
+        _playerIndex = 0;
+        currentPlayer = players[_playerIndex];
+        
         Instance = this;
     }
 
     public void RandomDice()
     {
-        StartCoroutine(RandomDiceDelay());
+        StartCoroutine(RandomDiceAndDelay());
     }
 
-    IEnumerator RandomDiceDelay()
+    IEnumerator RandomDiceAndDelay()
     {
         for (int i = 0; i < dice.Count; i++)
         {
@@ -44,6 +54,12 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(_diceDelay);
             dice[i].SetActive(true);
         }
+    }
+
+    public void NextPlayer()
+    {
+        _playerIndex = (++_playerIndex % players.Length);
+        currentPlayer = players[_playerIndex];
     }
 
     void Start()

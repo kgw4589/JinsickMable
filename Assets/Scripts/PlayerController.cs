@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (_gameManager.currentPlayer != gameObject)
+            return;
+        
         switch (_gameManager.state)
         {
             case GameManager.State.Wait:
@@ -49,12 +53,23 @@ public class PlayerController : MonoBehaviour
                 Build();
                 break;
             }
+            case GameManager.State.NextPlayer:
+            {
+                _gameManager.diceButton.SetActive(true);
+                
+                if (!_gameManager.isDiceDouble)
+                    _gameManager.NextPlayer();
+                _gameManager.isDiceDouble = false;
+                
+                _gameManager.state = GameManager.State.Dice;
+                break;
+            }
         }
     }
     
-    IEnumerator SetPosition(int index)
+    IEnumerator SetPosition(int diceValue)
     {
-        for (int i = 0; i < index; i++)
+        for (int i = 0; i < diceValue; i++)
         {
             var nextIndex = (_currentIndex + i + 1) % _map.Count;
             var dirPos = _map[nextIndex].transform.position
@@ -67,16 +82,15 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
 
-        _currentIndex = (_currentIndex + index) % _map.Count;
+        _currentIndex = (_currentIndex + diceValue) % _map.Count;
 
         _gameManager.state = GameManager.State.Build;
     }
 
     void Build()
     {
-        _gameManager.diceButton.SetActive(true);
         Debug.Log(_gameManager.state);
         
-        _gameManager.state = GameManager.State.Dice;
+        _gameManager.state = GameManager.State.NextPlayer;
     }
 }
