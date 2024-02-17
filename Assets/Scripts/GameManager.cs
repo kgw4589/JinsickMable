@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    public static GameManager instance;
 
     public GameObject[] players;
     public GameObject currentPlayer;
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour
     
     public enum State
     {
+        Ready,
         Dice,
         Move,
         Wait,
@@ -26,19 +28,23 @@ public class GameManager : MonoBehaviour
 
     private float _diceDelay = 0.2f;
     public int diceValue = 0;
-    public int doubleCheckValue = 10;
+    
+    public List<int> doubleCheckValue;
     public bool isDiceDouble = false;
 
     public GameObject diceButton;
     public GameObject diceValueText;
 
+    public GameObject buildPanel;
+    public GameObject travelPanel;
+    
     void Awake()
     {
         state = State.Dice;
         _playerIndex = 0;
         currentPlayer = players[_playerIndex];
-        
-        Instance = this;
+
+        instance = this;
     }
 
     public void RandomDice()

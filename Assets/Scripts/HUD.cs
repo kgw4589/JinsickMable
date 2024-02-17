@@ -10,12 +10,15 @@ public class HUD : MonoBehaviour
     public enum StateInfo
     {
         DiceValueText,
-        DiceButton
+        DiceButton,
+        Build
     };
 
     public StateInfo state;
 
     public Text myText;
+
+    public Toggle[] toggle;
 
     void OnEnable()
     {
@@ -24,7 +27,7 @@ public class HUD : MonoBehaviour
             case StateInfo.DiceValueText:
             {
                 myText.text = String.Format("l {0} l",
-                    GameManager.Instance.diceValue);
+                    GameManager.instance.diceValue);
                 break;
             }
         }
@@ -32,7 +35,14 @@ public class HUD : MonoBehaviour
     
     public void RandomDice()
     {
-        GameManager.Instance.RandomDice();
+        GameManager.instance.RandomDice();
         gameObject.SetActive(false);
+    }
+
+    public void BuildButton()
+    {
+        Debug.Log("건설");
+        GameManager.instance.buildPanel.SetActive(false);
+        GameManager.instance.state = GameManager.State.NextPlayer;
     }
 }

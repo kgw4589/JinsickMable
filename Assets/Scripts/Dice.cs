@@ -19,7 +19,7 @@ public class Dice : MonoBehaviour
 
     void Awake()
     {
-        _gameManager = GameManager.Instance;
+        _gameManager = GameManager.instance;
     }
     
     void OnEnable()
@@ -30,11 +30,18 @@ public class Dice : MonoBehaviour
         Debug.Log("랜덤값" + _randomValue);
         _gameManager.diceValue += (_randomValue);
 
-        if (_gameManager.doubleCheckValue >= 10)
-            _gameManager.doubleCheckValue = _randomValue;
-        else if (_gameManager.doubleCheckValue == _randomValue)
-            _gameManager.isDiceDouble = true;
-        else _gameManager.doubleCheckValue = 10;
+        _gameManager.doubleCheckValue.Add(_randomValue);
+
+        if (_gameManager.doubleCheckValue.Count == 2)
+        {
+            if (_gameManager.doubleCheckValue[0]
+                ==_gameManager.doubleCheckValue[1])
+            {
+                _gameManager.isDiceDouble = true;
+            }
+            
+            _gameManager.doubleCheckValue.Clear();
+        }
         
         transform.DOJump(dirPos.position,
             _jumpPower,
