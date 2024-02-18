@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public State state;
     
     public List<GameObject> map, dice;
+    public int currentMapLogicIndex;
 
     private float _diceDelay = 0.2f;
     public int diceValue = 0;
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
         state = State.Dice;
         _playerIndex = 0;
         currentPlayer = players[_playerIndex];
-
+        
         instance = this;
     }
 

@@ -16,7 +16,7 @@ public class Map : MonoBehaviour
 
     public MapInfo mapInfo;
 
-    public int[] constructionCost = new int[4];
+    public int[] constructionCost;
 
     private GameObject _myOwner;
 
@@ -24,6 +24,11 @@ public class Map : MonoBehaviour
     {
         switch (mapInfo)
         {
+            case MapInfo.Normal:
+            {
+                GameManager.instance.buildPanel.SetActive(true);
+                break;
+            }
             case MapInfo.Start:
             {
                 SetStateNextPlayer();
@@ -31,13 +36,8 @@ public class Map : MonoBehaviour
             }
             case MapInfo.DesertIsland:
             {
-                ChangeCurrentPlayerInfo(1);
+                ChangeCurrentPlayerInfo(MapInfo.DesertIsland);
                 SetStateNextPlayer();
-                break;
-            }
-            case MapInfo.Normal:
-            {
-                GameManager.instance.buildPanel.SetActive(true);
                 break;
             }
             case MapInfo.Gambling:
@@ -52,18 +52,32 @@ public class Map : MonoBehaviour
             }
             case MapInfo.Travel:
             {
-                ChangeCurrentPlayerInfo(2);
+                ChangeCurrentPlayerInfo(MapInfo.Travel);
                 Travel();
                 break;
             }
         }
     }
 
-    void ChangeCurrentPlayerInfo(int info)
+    void ChangeCurrentPlayerInfo(MapInfo info)
     {
         GameManager.instance.currentPlayer
             .GetComponent<PlayerController>()
             .ChangePlayerInfo(info);
+    }
+
+    public void Build(bool[] selectedBuildToggle)
+    {
+        _myOwner = GameManager.instance.currentPlayer;
+        
+        for (int i = 0; i < selectedBuildToggle.Length; i++)
+        {
+            if (selectedBuildToggle[i])
+            {
+                Debug.Log(transform.GetChild(i).name);
+                transform.GetChild(i).gameObject.SetActive(true);
+            }
+        }
     }
 
     void Travel()

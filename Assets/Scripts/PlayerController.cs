@@ -106,7 +106,6 @@ public class PlayerController : MonoBehaviour
 
         if (GameManager.instance.state == GameManager.State.Ready)
         {
-            Debug.Log(3213);
             GameManager.instance.state = GameManager.State.Dice;
             _gameManager.diceButton.SetActive(true);
         }
@@ -172,6 +171,8 @@ public class PlayerController : MonoBehaviour
 
     void Build()
     {
+        _gameManager.currentMapLogicIndex = _currentIndex;
+        
         Map currentMap = _gameManager.map[_currentIndex].
                                 GetComponent<Map>();
 
@@ -191,16 +192,16 @@ public class PlayerController : MonoBehaviour
         _gameManager.state = GameManager.State.Ready;
     }
 
-    public void ChangePlayerInfo(int info)
+    public void ChangePlayerInfo(Map.MapInfo info)
     {
         switch (info)
         {
-            case 1:
+            case Map.MapInfo.DesertIsland:
             {
                 _playerInfo = PlayerInfo.DesertIsland;
                 break;
             }
-            case 2:
+            case Map.MapInfo.Travel:
             {
                 _playerInfo = PlayerInfo.Travel;
                 break;

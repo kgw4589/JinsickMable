@@ -42,7 +42,20 @@ public class HUD : MonoBehaviour
     public void BuildButton()
     {
         Debug.Log("건설");
-        GameManager.instance.buildPanel.SetActive(false);
-        GameManager.instance.state = GameManager.State.NextPlayer;
+        GameManager gameManager = GameManager.instance;
+        int mapIndex = gameManager.currentMapLogicIndex;
+
+        Map map = gameManager.map[mapIndex].GetComponent<Map>();
+        bool[] isToggleOn = new bool[toggle.Length];
+
+        for (int i = 0; i < toggle.Length; i++)
+        {
+            isToggleOn[i] = toggle[i].isOn;
+        }
+
+        map.Build(isToggleOn);
+        
+        gameManager.buildPanel.SetActive(false);
+        gameManager.state = GameManager.State.NextPlayer;
     }
 }
