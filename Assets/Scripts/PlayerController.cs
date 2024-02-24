@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
+
 public class PlayerController : MonoBehaviour
 {
     private enum PlayerInfo
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private List<GameObject> _map;
 
     private int _currentIndex = 0;
+
+    private int _money;
 
     void Start()
     {

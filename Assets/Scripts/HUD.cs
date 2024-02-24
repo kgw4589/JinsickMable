@@ -19,6 +19,7 @@ public class HUD : MonoBehaviour
     public Text myText;
 
     public Toggle[] toggle;
+    public Text[] toggleTxt;
 
     void OnEnable()
     {
@@ -28,6 +29,10 @@ public class HUD : MonoBehaviour
             {
                 myText.text = String.Format("l {0} l",
                     GameManager.instance.diceValue);
+                break;
+            }
+            case StateInfo.Build:
+            {
                 break;
             }
         }

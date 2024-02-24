@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +27,7 @@ public class Map : MonoBehaviour
         {
             case MapInfo.Normal:
             {
-                GameManager.instance.buildPanel.SetActive(true);
+                Normal();
                 break;
             }
             case MapInfo.Start:
@@ -56,6 +57,19 @@ public class Map : MonoBehaviour
                 Travel();
                 break;
             }
+        }
+    }
+
+    void Normal()
+    {
+        var buildPanel = GameManager.instance.buildPanel;
+        buildPanel.SetActive(true);
+        HUD hud = buildPanel.GetComponent<HUD>();
+
+        for (int i = 0; i < constructionCost.Length; i++)
+        {
+            hud.toggleTxt[i].text =
+                $"제 {i+1}건물\n{constructionCost[i]}원";
         }
     }
 
