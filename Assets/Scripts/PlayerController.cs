@@ -27,12 +27,14 @@ public class PlayerController : MonoBehaviour
 
     private int _currentIndex = 0;
 
-    private int _money;
+    public int money;
 
     void Start()
     {
         _gameManager = GameManager.instance;
         _map = _gameManager.map;
+
+        money = GameManager.START_MONEY;
     }
 
     void Update()

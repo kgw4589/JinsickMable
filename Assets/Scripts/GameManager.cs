@@ -38,6 +38,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject buildPanel;
     public GameObject travelPanel;
+
+    public List<int> buildingCost;
+    public int totalBuildingCost;
+
+    public GameObject haveLittleMoney;
+
+    public const int START_MONEY = -10000;
     
     void Awake()
     {
@@ -67,15 +74,5 @@ public class GameManager : MonoBehaviour
     {
         _playerIndex = (++_playerIndex % players.Length);
         currentPlayer = players[_playerIndex];
-    }
-
-    void Start()
-    {
-        
-    }
-    
-    void Update()
-    {
-        
     }
 }

@@ -21,8 +21,12 @@ public class Map : MonoBehaviour
 
     private GameObject _myOwner;
 
+    private PlayerController _curPlayerController;
+
     public void OnLogic()
     {
+        SetCurrentPlayerScript();
+        
         switch (mapInfo)
         {
             case MapInfo.Normal:
@@ -54,7 +58,6 @@ public class Map : MonoBehaviour
             case MapInfo.Travel:
             {
                 ChangeCurrentPlayerInfo(MapInfo.Travel);
-                Travel();
                 break;
             }
         }
@@ -62,41 +65,50 @@ public class Map : MonoBehaviour
 
     void Normal()
     {
-        var buildPanel = GameManager.instance.buildPanel;
-        buildPanel.SetActive(true);
-        HUD hud = buildPanel.GetComponent<HUD>();
-
         for (int i = 0; i < constructionCost.Length; i++)
         {
-            hud.toggleTxt[i].text =
-                $"제 {i+1}건물\n{constructionCost[i]}원";
+            GameManager.instance.buildingCost.Add(constructionCost[i]);
         }
+        
+        GameManager.instance.buildPanel.SetActive(true);
     }
 
+    void SetCurrentPlayerScript()
+    {
+        _curPlayerController =  GameManager.instance.
+            currentPlayer.GetComponent<PlayerController>();
+    }
+    
     void ChangeCurrentPlayerInfo(MapInfo info)
     {
-        GameManager.instance.currentPlayer
-            .GetComponent<PlayerController>()
-            .ChangePlayerInfo(info);
+        _curPlayerController.ChangePlayerInfo(info);
     }
 
     public void Build(bool[] selectedBuildToggle)
     {
-        _myOwner = GameManager.instance.currentPlayer;
-        
-        for (int i = 0; i < selectedBuildToggle.Length; i++)
-        {
-            if (selectedBuildToggle[i])
-            {
-                Debug.Log(transform.GetChild(i).name);
-                transform.GetChild(i).gameObject.SetActive(true);
-            }
-        }
-    }
+        GameManager.instance.buildingCost.Clear();
 
-    void Travel()
-    {
-        
+        if (_curPlayerController.money > GameManager.instance.totalBuildingCost)
+        {
+            _myOwner = GameManager.instance.currentPlayer;
+            GameManager.instance.totalBuildingCost = 0;
+            
+            for (int i = 0; i < selectedBuildToggle.Length; i++)
+            {
+                if (selectedBuildToggle[i])
+                {
+                    Debug.Log(transform.GetChild(i).name);
+                    transform.GetChild(i).gameObject.SetActive(true);
+                }
+            }
+
+            GameManager.instance.state = GameManager.State.NextPlayer;
+        }
+        else
+        {
+            OnLogic();
+            GameManager.instance.haveLittleMoney.SetActive(true);
+        }
     }
 
     void SetStateNextPlayer()

@@ -11,7 +11,8 @@ public class HUD : MonoBehaviour
     {
         DiceValueText,
         DiceButton,
-        Build
+        Build,
+        HaveLittleMoney
     };
 
     public StateInfo state;
@@ -19,7 +20,7 @@ public class HUD : MonoBehaviour
     public Text myText;
 
     public Toggle[] toggle;
-    public Text[] toggleTxt;
+    [SerializeField] private Text[] toggleText;
 
     void OnEnable()
     {
@@ -33,6 +34,12 @@ public class HUD : MonoBehaviour
             }
             case StateInfo.Build:
             {
+                SetToggleCost();
+                break;
+            }
+            case StateInfo.HaveLittleMoney:
+            {
+                StartCoroutine(Destroy(1f));
                 break;
             }
         }
@@ -42,6 +49,15 @@ public class HUD : MonoBehaviour
     {
         GameManager.instance.RandomDice();
         gameObject.SetActive(false);
+    }
+
+    void SetToggleCost()
+    {
+        var cost = GameManager.instance.buildingCost;
+        for (int i = 0; i < cost.Count; i++)
+        {
+            toggleText[i].text = $"제 {i + 1}건물\n{cost[i]}원";
+        }
     }
 
     public void BuildButton()
@@ -55,12 +71,32 @@ public class HUD : MonoBehaviour
 
         for (int i = 0; i < toggle.Length; i++)
         {
-            isToggleOn[i] = toggle[i].isOn;
+            if (toggle[i].isOn)
+            {
+                isToggleOn[i] = true;
+                GameManager.instance.totalBuildingCost += map.constructionCost[i];
+            }
+            else
+            {
+                isToggleOn[i] = false;
+            }
         }
 
-        map.Build(isToggleOn);
-        
         gameManager.buildPanel.SetActive(false);
-        gameManager.state = GameManager.State.NextPlayer;
+        
+        map.Build(isToggleOn);
+    }
+
+    IEnumerator Destroy(float sec)
+    {
+        yield return new WaitForSeconds(sec);
+        gameObject.SetActive(false);
+    }
+
+    public void CloseButton()
+    {
+        GameManager.instance.buildPanel.SetActive(false);
+        GameManager.instance.buildingCost.Clear();
+        GameManager.instance.state = GameManager.State.NextPlayer;
     }
 }
